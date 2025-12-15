@@ -34,3 +34,7 @@ struct Transaction: Identifiable {
         })?.value ?? appTint
     }
 }
+
+
+//sample transactions for UI Building
+

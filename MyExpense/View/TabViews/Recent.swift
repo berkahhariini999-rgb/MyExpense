@@ -6,11 +6,18 @@
 //
 
 import SwiftUI
+import Combine
 
 struct Recent: View {
     
     //user properties
     @AppStorage("username") private var username: String = ""
+    @State private var startDate: Date = .now.startofMonth
+    @State private var endDate: Date = .now.endofMonth
+    @State private var selectedCategory: Category = .expense
+    //for animation
+    @Namespace private var animation
+    
     var body: some View {
         GeometryReader {
             let size = $0.size
@@ -21,8 +28,17 @@ struct Recent: View {
                         Section {
                            // date filter
                             Button(action:{}, label : {
-                                Text("")
+                                Text("\(format(date: startDate,format: "dd - MMM yy"))to\(format(date:endDate,format: "dd - MMM yy"))")
+                                    .font(.caption2)
+                                    .foregroundStyle(.gray)
                             })
+                            .hSpacing(.leading)
+                            
+                            //card view
+                            CardView(income: 2039, expense: 4098)
+                            
+                            //CUSTOM SEGEMENTED CONTROL
+                        CustomSegmentedControl()
                         } header: {
                             HeaderView(size)
                         }
@@ -30,11 +46,17 @@ struct Recent: View {
                     }
                     .padding(15)
                 }
+                .background(.gray.opacity(0.15))
+                .padding(.top, 5)
             }
+           
         }
     }
     
     
+    
+    
+
     //header view
     @ViewBuilder
     func HeaderView(_ size:CGSize) -> some View {
@@ -88,12 +110,37 @@ struct Recent: View {
         }
     }
     
+    //segmented control
+    @ViewBuilder
+    func CustomSegmentedControl() -> some View {
+        HStack(spacing: 0) {
+            ForEach(Category.allCases, id: \.rawValue){
+                category in
+                Text(category.rawValue)
+                    .hSpacing()
+                    .padding(.vertical, 10)
+                    .background {
+                        if category == selectedCategory {
+                            Capsule()
+                                .fill(.background)
+                                .matchedGeometryEffect(id: "ACTIVETAB", in: animation)
+                        }
+                    }
+                    .contentShape(.capsule)
+                    .onTapGesture {
+                        withAnimation(.snappy) {
+                            selectedCategory = category
+                        }
+                    }
+            }
+        }
+        .background(.gray.opacity(0.15), in: .capsule)
+    }
+    
     func headerBGOpacity(_ proxy: GeometryProxy) -> CGFloat {
         let minY = proxy.frame(in: .scrollView).minY + safeArea.top
         return minY > 0 ? 0 : (-minY / 15)
     }
-    
-    
     
     func headerScale(_ size: CGSize, proxy: GeometryProxy) -> CGFloat {
         let minY = proxy.frame(in: .scrollView).minY
@@ -104,6 +151,10 @@ struct Recent: View {
         
         return 1 + scale
     }
+    
+    
+    
+    
 }
 
 #Preview {
