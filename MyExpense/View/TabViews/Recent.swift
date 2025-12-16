@@ -39,6 +39,13 @@ struct Recent: View {
                             
                             //CUSTOM SEGEMENTED CONTROL
                         CustomSegmentedControl()
+                                .padding(.bottom, 10)
+                            ForEach(sampleTransactions.filter({
+                                $0.category == selectedCategory.rawValue
+                            })){
+                                transaction in
+                                TransactionCardView(transaction: transaction)
+                            }
                         } header: {
                             HeaderView(size)
                         }
@@ -47,7 +54,7 @@ struct Recent: View {
                     .padding(15)
                 }
                 .background(.gray.opacity(0.15))
-                .padding(.top, 5)
+               // .padding(.top, 5)
             }
            
         }

@@ -37,4 +37,9 @@ struct Transaction: Identifiable {
 
 
 //sample transactions for UI Building
-
+var sampleTransactions: [Transaction] = [
+    .init(title: "Magic Keyboard", remarks: "Apple Product", amount: 1200000, dateAdded: .now, category: .expense, tintColor: tints.randomElement()!),
+    .init(title: "Apple Music", remarks: "Subscription", amount: 30000, dateAdded: .now, category: .expense, tintColor: tints.randomElement()!),
+    .init(title: "iCloud", remarks: "Subscription", amount: 15000, dateAdded: .now, category: .expense, tintColor: tints.randomElement()!),
+    .init(title: "Payment", remarks: "Payment Received", amount: 24000, dateAdded: .now, category: .income, tintColor: tints.randomElement()!),
+]
