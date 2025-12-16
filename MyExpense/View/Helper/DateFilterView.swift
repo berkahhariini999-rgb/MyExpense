@@ -24,14 +24,14 @@ struct DateFilterView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.roundedRectangle(radius: 5))
-                .tint(appTint)
+                .tint(.red)
                 
                 Button("Filter"){
                     onSubmit(start, end)
                 }
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.roundedRectangle(radius: 5))
-                .tint(appTint)
+                .tint(.black)
             }
             .padding(.top, 10)
         }
