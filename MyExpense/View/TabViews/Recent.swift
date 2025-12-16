@@ -14,6 +14,7 @@ struct Recent: View {
     @AppStorage("username") private var username: String = ""
     @State private var startDate: Date = .now.startofMonth
     @State private var endDate: Date = .now.endofMonth
+    @State private var showFilterView: Bool = false
     @State private var selectedCategory: Category = .expense
     //for animation
     @Namespace private var animation
@@ -27,7 +28,9 @@ struct Recent: View {
                     LazyVStack(spacing:10,pinnedViews: [.sectionHeaders]){
                         Section {
                            // date filter
-                            Button(action:{}, label : {
+                            Button(action:{
+                                
+                            }, label : {
                                 Text("\(format(date: startDate,format: "dd - MMM yy"))to\(format(date:endDate,format: "dd - MMM yy"))")
                                     .font(.caption2)
                                     .foregroundStyle(.gray)
@@ -144,6 +147,12 @@ struct Recent: View {
         .background(.gray.opacity(0.15), in: .capsule)
     }
     
+    
+    //Data Filter View
+    @ViewBuilder
+    func DateFilterView() -> some View {
+        
+    }
     func headerBGOpacity(_ proxy: GeometryProxy) -> CGFloat {
         let minY = proxy.frame(in: .scrollView).minY + safeArea.top
         return minY > 0 ? 0 : (-minY / 15)
