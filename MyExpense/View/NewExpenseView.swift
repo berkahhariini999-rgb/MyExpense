@@ -52,14 +52,39 @@ struct NewExpenseView: View {
                             .background(.background, in: .rect(cornerRadius: 10))
                             .frame(maxWidth: 130)
                             .keyboardType(.decimalPad)
+                        
+                        CategoryCheckBox()
                     }
                 })
+                
+                VStack(alignment: .leading, spacing: 10, content: {
+                    Text("Date")
+                        .font(.caption)
+                        .foregroundStyle(.gray)
+                        .hSpacing(.leading)
+                    DatePicker("", selection: $dateAdded, displayedComponents: [.date])
+                        .datePickerStyle(.graphical)
+                        .padding(.horizontal,15)
+                        .padding(.vertical, 12)
+                        .background(.background, in: .rect(cornerRadius: 10))
+                })
+                
             }
             .padding(15)
         }
         .navigationTitle("Add Transaction")
         .background(.gray.opacity(0.15))
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Save", action: save)
+            }
+        })
     }
+    
+    func save() {
+        
+    }
+    
     
     @ViewBuilder
     func CustomSection(_ title: String, _ hint: String,value: Binding<String>) -> some View {
@@ -78,7 +103,37 @@ struct NewExpenseView: View {
         })
     }
     
-    
+    @ViewBuilder
+    func CategoryCheckBox() -> some View {
+        HStack(spacing: 10){
+            ForEach(Category.allCases, id: \.rawValue) {
+                category in
+                HStack(spacing: 5){
+                    ZStack {
+                        Image(systemName: "circle")
+                            .font(.title3)
+                            .foregroundStyle(appTint)
+                        
+                        if self.category == category {
+                            Image(systemName: "circle.fill")
+                                .font(.caption)
+                                .foregroundStyle(appTint)
+                        }
+                    }
+                    Text(category.rawValue)
+                        .font(.caption)
+                }
+                .contentShape(.rect)
+                .onTapGesture {
+                    self.category = category
+                }
+            }
+        }
+        .padding(.horizontal, 15)
+        .padding(.vertical, 12)
+        .hSpacing(.leading)
+        .background(.background, in: .rect(cornerRadius: 10))
+    }
     
     var numberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
