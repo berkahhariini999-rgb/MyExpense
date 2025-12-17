@@ -22,6 +22,23 @@ struct Graphs: View {
                         .padding(10)
                         .padding(.top,10)
                         .background(.background, in: .rect(cornerRadius: 10))
+                    
+                    ForEach(chartGroups) { group in
+                        VStack(alignment: .leading, spacing: 10){
+                            Text(format(date: group.date, format: "MMM yy"))
+                                .font(.caption)
+                                .foregroundStyle(.gray)
+                                .hSpacing(.leading)
+                            
+                            NavigationLink {
+                                ListOfExpenses(month: group.date)
+                            } label: {
+                                CardView(income: group.totalIncome, expense: group.totalExpense)
+                            }
+                            
+                        }
+                        
+                    }
                 }
                 .padding(15)
             }
@@ -67,7 +84,8 @@ struct Graphs: View {
                 AxisGridLine()
                 AxisTick()
                 AxisValueLabel {
-                    Text("\(doubleValue)")
+                    Text(axisLabel(doubleValue))
+                   // Text("\(doubleValue)")
                 }
             }
         }
@@ -123,6 +141,62 @@ struct Graphs: View {
             }
         }
         
+    }
+    
+    func axisLabel (_ value: Double) -> String {
+        let intValue = Int(value)
+        let kValue = intValue / 1000
+        
+        return intValue < 1000 ? "\(intValue)" : "\(kValue)K"
+    }
+    
+    struct ListOfExpenses: View {
+        let month: Date
+        var body: some View {
+            ScrollView(.vertical) {
+                LazyVStack(spacing: 15) {
+                    //income
+                    Section {
+                        FilterTransactionView(startDate: month.startofMonth, endDate: month.endofMonth, category: .income) {
+                            transactions in
+                            ForEach(transactions) { transaction in
+                                NavigationLink(value: transaction){
+                                    TransactionCardView(transaction: transaction)
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
+                    //expense
+                    Section {
+                        FilterTransactionView(startDate: month.startofMonth, endDate: month.endofMonth, category: .expense) {
+                            transactions in
+                            ForEach(transactions) { transaction in
+                                NavigationLink(value: transaction){
+                                    TransactionCardView(transaction: transaction)
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
+                    header: {
+                        Text("Expense")
+                            .font(.caption)
+                            .foregroundStyle(.gray)
+                            .hSpacing(.leading)
+                    }
+                }
+                .padding(15)
+            }
+            .background(.gray.opacity(0.15))
+            .navigationTitle(format(date: month, format: "MMM yy"))
+            .navigationDestination(for: Transaction.self) {
+                transaction in
+                TransactionView(editTransaction: transaction)
+            }
+        }
     }
     
     #Preview {
