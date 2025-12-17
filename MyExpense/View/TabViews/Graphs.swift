@@ -35,6 +35,7 @@ struct Graphs: View {
                             } label: {
                                 CardView(income: group.totalIncome, expense: group.totalExpense)
                             }
+                            .buttonStyle(.plain)
                             
                         }
                         
@@ -177,6 +178,7 @@ struct Graphs: View {
                                     TransactionCardView(transaction: transaction)
                                     
                                 }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
