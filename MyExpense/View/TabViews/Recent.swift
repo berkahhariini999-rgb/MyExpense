@@ -41,7 +41,8 @@ struct Recent: View {
                             FilterTransactionView(startDate: startDate, endDate: endDate) {
                                 transactions in
                                 CardView(income: total(transactions, category: .income)
-                                         , expense: total(transactions, category: .expense))
+                                         , expense: total(transactions,
+                                                          category: .expense))
                                 
                                 //CUSTOM SEGEMENTED CONTROL
                             CustomSegmentedControl()

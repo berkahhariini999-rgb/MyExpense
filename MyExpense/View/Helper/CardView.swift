@@ -36,7 +36,7 @@ struct CardView: View {
                     ForEach(Category.allCases, id: \.rawValue) {
                         category in
                         let symbolImage = category == .income ? "arrow.down" : "arrow.up"
-                        let tint = category == .income ? Color.green : Color.red
+                        let tint = category == .income ? Color.green : Color.blue
                         HStack(spacing: 10) {
                             Image(systemName: symbolImage)
                                 .font(.callout.bold())
