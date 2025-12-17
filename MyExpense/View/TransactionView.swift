@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 
-struct NewExpenseView: View {
+struct TransactionView: View {
     
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
@@ -51,12 +51,18 @@ struct NewExpenseView: View {
                         .hSpacing(.leading)
                     
                     HStack(spacing: 15){
-                        TextField("0.0", value: $amount, formatter: numberFormatter)
-                            .padding(.horizontal, 15)
+                        HStack(spacing: 4){
+                            Text(currencySymbol)
+                                .font(.callout.bold())
+                            TextField("0.0", value: $amount, formatter: numberFormatter)
+                                .keyboardType(.decimalPad)
+                        }
+                       
+                          .padding(.horizontal, 15)
                             .padding(.vertical, 12)
                             .background(.background, in: .rect(cornerRadius: 10))
                             .frame(maxWidth: 130)
-                            .keyboardType(.decimalPad)
+                           
                         
                         CategoryCheckBox()
                     }
@@ -178,7 +184,7 @@ struct NewExpenseView: View {
 
 #Preview {
     NavigationStack {
-        NewExpenseView()
+        TransactionView()
     }
     
 
