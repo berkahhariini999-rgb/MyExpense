@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 struct NewExpenseView: View {
+    
+    @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
+    var editTransaction: Transaction?
     @State private var title:String = ""
     @State private var remarks:String = ""
     @State private var amount:Double = .zero
@@ -16,7 +21,7 @@ struct NewExpenseView: View {
     @State private var category: Category = .expense
     
     //random
-    var tint: TintColor = tints.randomElement()!
+    @State var tint: TintColor = tints.randomElement()!
     var body: some View {
         ScrollView(.vertical) {
             VStack(spacing: 15) {
@@ -72,17 +77,44 @@ struct NewExpenseView: View {
             }
             .padding(15)
         }
-        .navigationTitle("Add Transaction")
+        .navigationTitle("\(editTransaction == nil ? "Add" : "Edit") Transaction")
         .background(.gray.opacity(0.15))
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save", action: save)
             }
         })
+        .onAppear(perform: {
+            if let editTransaction {
+                title = editTransaction.title
+                remarks = editTransaction.remarks
+                dateAdded = editTransaction.dateAdded
+                if let category = editTransaction.rawCategory {
+                    self.category = category
+                }
+                amount = editTransaction.amount
+                if let tint = editTransaction.tint {
+                    self.tint = tint
+                }
+               
+            }
+        })
     }
     
     func save() {
-        
+        if editTransaction != nil {
+            editTransaction?.title = title
+            editTransaction?.remarks = remarks
+            editTransaction?.amount = amount
+            editTransaction?.category = category.rawValue
+            editTransaction?.dateAdded = dateAdded
+        } else {
+            let transaction = Transaction(title: title, remarks: remarks, amount: amount, dateAdded: dateAdded, category: category, tintColor: tint)
+            
+            context.insert(transaction)
+        }
+       
+        dismiss()
     }
     
     
