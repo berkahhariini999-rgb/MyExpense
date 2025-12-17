@@ -19,7 +19,7 @@ struct Recent: View {
     @State private var selectedCategory: Category = .expense
     //for animation
     @Namespace private var animation
-    @Query(sort: [SortDescriptor(\Transaction.dateAdded, order: .reverse)], animation: .snappy) private var transactions: [Transaction]
+   // @Query(sort: [SortDescriptor(\Transaction.dateAdded, order: .reverse)], animation: .snappy) private var transactions: [Transaction]
     var body: some View {
         GeometryReader {
             let size = $0.size
@@ -38,22 +38,30 @@ struct Recent: View {
                             })
                             .hSpacing(.leading)
                             
-                            //card view
-                            CardView(income: 2039, expense: 4098)
-                            
-                            //CUSTOM SEGEMENTED CONTROL
-                        CustomSegmentedControl()
-                                .padding(.bottom, 10)
-                            ForEach(transactions) { transaction in
-                                NavigationLink {
-                                    TransactionView(editTransaction: transaction)
-                                } label : {
-                                    TransactionCardView(transaction: transaction)
+                            FilterTransactionView(startDate: startDate, endDate: endDate) {
+                                transactions in
+                                CardView(income: total(transactions, category: .income)
+                                         , expense: total(transactions, category: .expense))
+                                
+                                //CUSTOM SEGEMENTED CONTROL
+                            CustomSegmentedControl()
+                                    .padding(.bottom, 10)
+                                ForEach(transactions.filter({
+                                    $0.category == selectedCategory.rawValue
+                                })) { transaction in
+                                    NavigationLink {
+                                        TransactionView(editTransaction: transaction)
+                                    } label : {
+                                        TransactionCardView(transaction: transaction)
+                                    }
+                                   
+                                    .buttonStyle(.plain)
+                                   
                                 }
-                               
-                                .buttonStyle(.plain)
-                               
                             }
+                            
+                            //card view
+                           
 //                            ForEach(sampleTransactions.filter({
 //                                $0.category == selectedCategory.rawValue
 //                            })){
